@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 function App() {
   const classes = useStyles();
   const [state,setState] = useState({
-    playing:false
+    playing:true
   });
 
   const playerRef = useRef(null);
@@ -32,6 +32,10 @@ function App() {
   
   const handleRewind=()=>{
     playerRef.current.seekTo(playerRef.current.getCurrentTime()-10);
+  }
+
+  const handleForwad=()=>{
+    playerRef.current.seekTo(playerRef.current.getCurrentTime()+10);
   }
   return (
     <>
@@ -54,6 +58,7 @@ function App() {
           onPlayPause={handlePlayPause}
           playing={playing}
           onRewind={handleRewind}
+          onForward={handleForwad}
           />
         </div>
       </Container>

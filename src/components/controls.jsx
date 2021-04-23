@@ -58,7 +58,7 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     bottom: 0,
-    background: "rgba(0,0,0,0.6)",
+    background: "rgba(0,0,0,0.2)",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -94,7 +94,7 @@ function ValueLabelComponent(props) {
     </Tooltip>
   );
 }
-function Controls({ onPlayPause, playing,onRewind }) {
+function Controls({ onPlayPause, playing,onRewind,onForward }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -155,7 +155,7 @@ function Controls({ onPlayPause, playing,onRewind }) {
           </IconButton>
         )}
 
-        <IconButton className={classes.constrolIcons} aria-label="reqind">
+        <IconButton onClick={onForward} className={classes.constrolIcons} aria-label="reqind">
           <FastForwardOutlined fontSize="inherit" />
         </IconButton>
       </Grid>
@@ -183,14 +183,14 @@ function Controls({ onPlayPause, playing,onRewind }) {
                 onClick={onPlayPause}
                 className={classes.bottomControls}
               >
-                <PlayArrowOutlined fontSize="large" />
+                <PauseOutlined fontSize="large" />
               </IconButton>
             ) : (
               <IconButton
                 onClick={onPlayPause}
                 className={classes.bottomControls}
               >
-                <PauseOutlined fontSize="large" />
+                <PlayArrowOutlined fontSize="large" />
               </IconButton>
             )}
             <IconButton className={classes.bottomControls}>
