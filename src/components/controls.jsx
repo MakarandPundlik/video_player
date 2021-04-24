@@ -9,6 +9,7 @@ import {
   VolumeUpOutlined,
   Fullscreen,
 } from "@material-ui/icons";
+import VolumeOffOutlinedIcon from "@material-ui/icons/VolumeOffOutlined";
 import {
   makeStyles,
   Typography,
@@ -58,7 +59,7 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     bottom: 0,
-    background: "rgba(0,0,0,0.2)",
+    background: "rgba(0,0,0,0.15)",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -94,7 +95,24 @@ function ValueLabelComponent(props) {
     </Tooltip>
   );
 }
-function Controls({ onPlayPause, playing,onRewind,onForward }) {
+function Controls({
+  onPlayPause,
+  playing,
+  onRewind,
+  onForward,
+  muted,
+  onMute,
+  onVolumeChange,
+  onVolumeSeekUp,
+  volume,
+  playbackrate,
+  onPlaybackrateChange,
+  onToggleFullScreen,
+  played,
+  onSeek,
+  onSeekMouseDown,
+  onSeekMouseUp
+}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -133,7 +151,11 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
 
       {/* middle controls */}
       <Grid container direction="row" justify="center" alignItems="center">
-        <IconButton onClick={onRewind} className={classes.constrolIcons} aria-label="reqind">
+        <IconButton
+          onClick={onRewind}
+          className={classes.constrolIcons}
+          aria-label="reqind"
+        >
           <FastRewindOutlined fontSize="inherit" />
         </IconButton>
 
@@ -155,7 +177,11 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
           </IconButton>
         )}
 
-        <IconButton onClick={onForward} className={classes.constrolIcons} aria-label="reqind">
+        <IconButton
+          onClick={onForward}
+          className={classes.constrolIcons}
+          aria-label="reqind"
+        >
           <FastForwardOutlined fontSize="inherit" />
         </IconButton>
       </Grid>
@@ -172,8 +198,11 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
           <PrettoSlider
             min={0}
             max={100}
-            defaultValue={30}
+            value={played*100}
             ValueLabelComponent={ValueLabelComponent}
+            onChange={onSeek}
+            onMouseDown={onSeekMouseDown}
+            onChangeCommitted={onSeekMouseUp}
           ></PrettoSlider>
         </Grid>
         <Grid item>
@@ -193,15 +222,24 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
                 <PlayArrowOutlined fontSize="large" />
               </IconButton>
             )}
-            <IconButton className={classes.bottomControls}>
-              <VolumeUpOutlined fontSize="large" />
-            </IconButton>
+            {muted ? (
+              <IconButton onClick={onMute} className={classes.bottomControls}>
+                <VolumeOffOutlinedIcon fontSize="large" />
+              </IconButton>
+            ) : (
+              <IconButton onClick={onMute} className={classes.bottomControls}>
+                <VolumeUpOutlined fontSize="large" />
+              </IconButton>
+            )}
             <Slider
               className={classes.volumeControls}
               min={0}
               max={100}
-              defaultValue={100}
+              value={volume*100}
               ValueLabelComponent={ValueLabelComponent}
+              
+              onChange={onVolumeChange}
+              onChangeCommitted={onVolumeSeekUp}
             />
             <Grid item>
               <Button
@@ -220,7 +258,7 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
             varient="text"
             className={classes.bottomControls}
           >
-            <Typography>1x</Typography>
+            <Typography >{playbackrate}x</Typography>
           </Button>
 
           {/* popover component */}
@@ -240,8 +278,8 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
           >
             <Grid container direction="column-reverse">
               {[0.5, 1, 1.5, 2].map((rate) => (
-                <Button>
-                  <Typography vairent="text" color="primary">
+                <Button onClick={()=>onPlaybackrateChange(rate)}>
+                  <Typography vairent="text" color={rate===playbackrate?"secondary":"default"}>
                     {rate}
                   </Typography>
                 </Button>
@@ -249,7 +287,7 @@ function Controls({ onPlayPause, playing,onRewind,onForward }) {
             </Grid>
           </Popover>
 
-          <IconButton className={classes.bottomControls}>
+          <IconButton onClick={onToggleFullScreen} className={classes.bottomControls}>
             <Fullscreen fontSize="large" />
           </IconButton>
         </Grid>
